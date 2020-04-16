@@ -1,15 +1,10 @@
-package react.highcharts
+package react.hotkeys
 
 import utest._
 import japgolly.scalajs.react.test._
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
-
-import typings.highcharts.TypeofHighcharts
-import typings.highcharts.mod.Options
-import typings.highcharts.mod.charts
-import typings.highcharts.mod.{^ => HighCharts, _}
 
 import org.scalajs.dom.document
 import scala.scalajs.js.annotation.JSGlobal
