@@ -5,13 +5,13 @@ import js.|
 import js.JSConverters._
 
 @js.native
-trait KeySequence extends js.Object {
+trait KeyEvent extends js.Object {
   val sequence: js.UndefOr[String] = js.native
   val action: js.UndefOr[String]   = js.native
 }
-object KeySequence {
-  def apply(sequence: String, action: String): KeySequence =
-    js.Dynamic.literal(sequence = sequence, action = action).asInstanceOf[KeySequence]
+object KeyEvent {
+  def apply(sequence: String, action: String): KeyEvent =
+    js.Dynamic.literal(sequence = sequence, action = action).asInstanceOf[KeyEvent]
 }
 
 sealed abstract class OnKeyEvent(val action: String) {
@@ -22,30 +22,30 @@ final case class OnKeyDown(sequence:  String) extends OnKeyEvent("keydown")
 final case class OnKeyUp(sequence:    String) extends OnKeyEvent("keyup")
 
 @js.native
-trait KeySequenceDesc extends KeySequence {
+trait KeySequence extends KeyEvent {
   val name: js.UndefOr[String]                = js.native
   val sequences: js.UndefOr[js.Array[KeySeq]] = js.native
 }
-object KeySequenceDesc {
-  def apply(name: String, sequence: String): KeySequenceDesc =
+object KeySequence {
+  def apply(name: String, sequence: String): KeySequence =
     js.Dynamic
       .literal(name = name, sequence = sequence)
-      .asInstanceOf[KeySequenceDesc]
+      .asInstanceOf[KeySequence]
 
-  def apply(name: String, sequence: String, action: String): KeySequenceDesc =
+  def apply(name: String, sequence: String, action: String): KeySequence =
     js.Dynamic
       .literal(name = name, sequence = sequence, action = action)
-      .asInstanceOf[KeySequenceDesc]
+      .asInstanceOf[KeySequence]
 
-  def apply(name: String, sequences: Seq[KeySeq]): KeySequenceDesc =
+  def apply(name: String, sequences: Seq[KeySeq]): KeySequence =
     js.Dynamic
       .literal(name = name, sequences = sequences.toJSArray)
-      .asInstanceOf[KeySequenceDesc]
+      .asInstanceOf[KeySequence]
 
-  def apply(name: String, sequences: Seq[KeySeq], action: String): KeySequenceDesc =
+  def apply(name: String, sequences: Seq[KeySeq], action: String): KeySequence =
     js.Dynamic
       .literal(name = name, sequences = sequences.toJSArray, action = action)
-      .asInstanceOf[KeySequenceDesc]
+      .asInstanceOf[KeySequence]
 }
 
 class KeyMap {

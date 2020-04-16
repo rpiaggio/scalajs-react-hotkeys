@@ -29,8 +29,8 @@ object DemoMain {
         "UNDO" -> List("meta+z", "ctrl+z"),
         "UP" -> "up",
         "DOWN" -> OnKeyUp("down"),
-        "LEFT" -> KeySequenceDesc("Move Left", "left"),
-        "RIGHT" -> KeySequenceDesc("Move Right", List[KeySeq]("right", OnKeyUp("shift+right")))
+        "LEFT" -> KeySequence("Move Left", "left"),
+        "RIGHT" -> KeySequence("Move Right", List[KeySeq]("right", OnKeyUp("shift+right")))
       )
 
     val handlers =
