@@ -7,11 +7,11 @@ import react.common._
 import japgolly.scalajs.react.vdom.VdomElement
 
 final case class HotKeys(
-  keyMap:       js.UndefOr[KeyMap]    = js.undefined,
-  handlers:     js.UndefOr[js.Object] = js.undefined,
-  component:    js.UndefOr[String]    = js.undefined,
-  tabIndex:     js.UndefOr[Int]       = js.undefined,
-  allowChanges: js.UndefOr[Boolean]   = js.undefined,
+  keyMap:       js.UndefOr[KeyMap]   = js.undefined,
+  handlers:     js.UndefOr[Handlers] = js.undefined,
+  component:    js.UndefOr[String]   = js.undefined,
+  tabIndex:     js.UndefOr[Int]      = js.undefined,
+  allowChanges: js.UndefOr[Boolean]  = js.undefined,
   //innerRef: js.UndefOr[Ref] = js.undefined,
   root:                  js.UndefOr[Boolean]   = js.undefined,
   override val children: CtorType.ChildrenArgs = Seq.empty
@@ -40,7 +40,7 @@ object HotKeys {
   ): HotKeysProps = {
     val p = (new js.Object).asInstanceOf[HotKeysProps]
     p.keyMap       = q.keyMap.map(_.toJs)
-    p.handlers     = q.handlers
+    p.handlers     = q.handlers.map(_.toJs)
     p.component    = q.component
     p.tabIndex     = q.tabIndex
     p.allowChanges = q.allowChanges

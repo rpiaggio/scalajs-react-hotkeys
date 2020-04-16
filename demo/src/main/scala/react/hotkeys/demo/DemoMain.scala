@@ -33,15 +33,14 @@ object DemoMain {
         "RIGHT" -> KeySequenceDesc("Move Right", List[KeySeq]("right", OnKeyUp("shift+right")))
       )
 
-    val handlers = js
-      .Dictionary[js.Function1[ReactKeyboardEvent, Unit]](
+    val handlers =
+      Handlers(
         "UNDO" -> { e => e.preventDefault(); println("UNDO!") },
-        "UP" -> { _ => println("UP!") },
-        "DOWN" -> { _ => println("DOWN!") },
-        "LEFT" -> { _ => println("LEFT!") },
-        "RIGHT" -> { _ => println("RIGHT!") }
+        "UP" -> (() => println("UP!")),
+        "DOWN" -> (() => println("DOWN!")),
+        "LEFT" -> (() => println("LEFT!")),
+        "RIGHT" -> (() => println("RIGHT!"))
       )
-      .asInstanceOf[js.Object]
 
     def renderSection(i: Int) = React.Fragment(
       <.input(^.tabIndex := i + 1),
