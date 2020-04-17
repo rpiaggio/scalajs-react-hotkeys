@@ -10,36 +10,44 @@ import japgolly.scalajs.react.vdom.html_<^._
 import react.hotkeys.HotKeys
 import scala.scalajs.js.JSON
 import react.hotkeys._
+import org.scalajs.dom.raw.Element
+import org.scalajs.dom.html
 
 @JSExportTopLevel("DemoMain")
 object DemoMain {
   @JSExport
   def main(): Unit = {
-    // val conf = new HotKeysConfiguration( /*ignoreTags = js.Array[String]()*/ )
-
-    val conf =
-      js.Dynamic.literal(ignoreTags = js.Array[String]()).asInstanceOf[HotKeysConfiguration]
-
-    //println(JSON.stringify(conf))
-
-    HotKeysConfigure(conf)
+    HotKeysConfiguration(
+      logLevel                            = LogLevel.Info,
+      ignoreTags                          = List.empty[HtmlTagOf[_]],
+      ignoreRepeatedEventsWhenKeyHeldDown = false
+    ).apply()
 
     val keyMap =
       KeyMap(
         "UNDO" -> List("meta+z", "ctrl+z"),
         "UP" -> "up",
-        "DOWN" -> OnKeyUp("down"),
+        "DOWN" -> "down".on(KeyUp),
         "LEFT" -> KeySequence("Move Left", "left"),
-        "RIGHT" -> KeySequence("Move Right", List[KeySeq]("right", OnKeyUp("shift+right")))
+        "RIGHT" -> KeySequence("Move Right", List[KeySeq]("right", "shift+right".on(KeyUp))),
+        "DONT" -> "shift+1"
       )
+
+    def undo(e: ReactKeyboardEvent) = {
+      e.preventDefault()
+      println("UNDO!")
+    }
+
+    def right() = println("RIGHT!")
 
     val handlers =
       Handlers(
-        "UNDO" -> { e => e.preventDefault(); println("UNDO!") },
+        "UNDO" -> undo,
         "UP" -> (() => println("UP!")),
         "DOWN" -> (() => println("DOWN!")),
         "LEFT" -> (() => println("LEFT!")),
-        "RIGHT" -> (() => println("RIGHT!"))
+        "RIGHT" -> right _,
+        "DONT" -> (() => dom.window.alert("DON'T!"))
       )
 
     def renderSection(i: Int) = React.Fragment(
@@ -48,17 +56,32 @@ object DemoMain {
       <.button(^.tabIndex := i + 3, "HELLO")
     )
 
+    val ref = Ref[html.Element]
+
     val App =
-      <.div(
-        HotKeys(keyMap = keyMap, handlers = handlers)(
-          "WITH HOTKEYS:",
-          renderSection(0)
-        ),
-        <.div(
-          "WITHOUT HOTKEYS:",
-          renderSection(3)
+      ScalaComponent
+        .builder[Unit]("Hotkeys demo")
+        .render(_ =>
+          GlobalHotKeys(keyMap   = KeyMap("HELP" -> "shift+?"),
+                        handlers = Handlers("HELP" -> (() => dom.window.alert("HELP!"))))(
+            HotKeys(keyMap    = keyMap,
+                    handlers  = handlers,
+                    component = <.span,
+                    tabIndex  = 1,
+                    innerRef  = ref)(
+              // IgnoreKeys(only = "shift+1")(
+              "WITH HOTKEYS:",
+              renderSection(0)
+              // )
+            ),
+            <.div(^.tabIndex := 3)(
+              "WITHOUT HOTKEYS:",
+              renderSection(3)
+            )
+          )
         )
-      )
+        .componentDidMount(_ => ref.foreach(_.focus()))
+        .build
 
     val container = Option(dom.document.getElementById("root")).getOrElse {
       val elem = dom.document.createElement("div")
@@ -67,7 +90,7 @@ object DemoMain {
       elem
     }
 
-    App.renderIntoDOM(container)
+    App().renderIntoDOM(container)
 
     ()
 
