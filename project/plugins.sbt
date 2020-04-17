@@ -5,6 +5,4 @@ addSbtPlugin("org.scala-js" % "sbt-scalajs" % scalaJSVersion)
 
 addSbtPlugin("ch.epfl.scala" % "sbt-scalajs-bundler-sjs06" % "0.17.0")
 
-resolvers += Resolver.bintrayRepo("oyvindberg", "ScalablyTyped")
-
-addSbtPlugin("org.scalablytyped" % "sbt-scalablytyped" % "202002201029")
+addSbtPlugin("com.geirsson" % "sbt-ci-release" % "1.5.2")
