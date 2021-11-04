@@ -5,7 +5,7 @@ ThisBuild / scalaVersion := "2.13.7"
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 val reactJS      = "17.0.2"
-val scalaJsReact = "2.0.0-RC3"
+val scalaJsReact = "2.0.0"
 val reactHotkeys = "2.0.0"
 
 addCommandAlias(
